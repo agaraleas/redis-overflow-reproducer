@@ -15,6 +15,12 @@ RUN cd redis-7.2.5 && \
     make install && \
     make clean
 
+#Build versioning module that reproduces the integer overflow
+COPY int-overflow-reproduction-module int-overflow-reproduction-module
+RUN cd int-overflow-reproduction-module && \
+    make && \
+    make clean
+
 # Copy the Redis configuration file
 COPY redis.conf redis-7.2.5/redis.conf
 

@@ -1,0 +1,3 @@
+int-overflow-reproduction-module/src/*.o
+int-overflow-reproduction-module/src/*.so
+int-overflow-reproduction-module/out/*
