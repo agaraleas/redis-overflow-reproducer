@@ -11,10 +11,15 @@ RUN wget http://download.redis.io/releases/redis-7.2.5.tar.gz && \
 
 # Build Redis
 RUN cd redis-7.2.5 && \
-    make && make install
+    make && \ 
+    make install && \
+    make clean
+
+# Copy the Redis configuration file
+COPY redis.conf redis-7.2.5/redis.conf
 
 # Expose the Redis port
 EXPOSE 6379
 
 # Start Redis
-CMD ["redis-7.2.5/src/redis-server", "redis-7.2.5/redis.conf"]
+CMD ["/usr/local/bin/redis-server", "redis-7.2.5/redis.conf"]
