@@ -4,17 +4,17 @@ static void timerFired(RedisModuleCtx *ctx, void *data){
     RedisModule_Log(ctx, "notice", "Timer fired");
 }
 
-static int reproduce(RedisModuleCtx *ctx, RedisModuleString **argv, int argc) {
+static int createTimer(RedisModuleCtx *ctx, RedisModuleString **argv, int argc) {
     RedisModuleTimerID timer_id = 0;
+    long long timeout = 0;
     
     RedisModule_AutoMemory(ctx);
 
-    timer_id = RedisModule_CreateTimer(ctx, 2147583647000, timerFired, NULL);
-    if (timer_id == 0) {
-      return RedisModule_ReplyWithError(ctx, "ERR could not create timer");
+    if (RedisModule_StringToLongLong(argv[1], &timeout) != REDISMODULE_OK) {
+      return RedisModule_ReplyWithError(ctx, "ERR invalid timeout");
     }
 
-    timer_id = RedisModule_CreateTimer(ctx, 5, timerFired, NULL);
+    timer_id = RedisModule_CreateTimer(ctx, timeout, timerFired, NULL);
     if (timer_id == 0) {
       return RedisModule_ReplyWithError(ctx, "ERR could not create timer");
     }
@@ -31,8 +31,8 @@ int RedisModule_OnLoad(RedisModuleCtx *ctx) {
     return REDISMODULE_ERR;
   }
 
-  // register overflow.reproduce to recreate the problem on demand
-  if (RedisModule_CreateCommand(ctx, "overflow.reproduce", reproduce, "fast write",
+  // register overflow.createTimer to add custom timers that help on investigation
+  if (RedisModule_CreateCommand(ctx, "overflow.createTimer", createTimer, "fast write",
                                 1, 1, 1) == REDISMODULE_ERR) {
     return REDISMODULE_ERR;
   }

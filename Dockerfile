@@ -9,6 +9,8 @@ RUN wget http://download.redis.io/releases/redis-7.2.5.tar.gz && \
     tar xzf redis-7.2.5.tar.gz && \
     rm redis-7.2.5.tar.gz
 
+COPY ae.c redis-7.2.5/src/ae.c
+
 # Build Redis
 RUN cd redis-7.2.5 && \
     make && \ 
